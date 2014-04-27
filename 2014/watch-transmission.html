@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>上传transmission状态至Yeelink网站 - 续 - atsuas</title>
+		<script>if (top !== self) top.location = self.location;</script>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+		<link rel="stylesheet" href="http://cdn.staticfile.org/twitter-bootstrap/3.0.0-rc1/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="/static/style.css?v=7c864" />
+		<link rel="stylesheet" href="/static/pygments.css?v=c6adc" />
+		
+		<link rel="alternate" type="application/rss+xml" href="/feed.xml" title="atsuas" />
+		<!--<script type="text/javascript" src="http://sanalyse.sinaapp.com/sanalyse.js"></script>-->
+		<!--[if lt IE 9]>
+		<script type="text/javascript" src="/static/html5shiv.js?v=9a10c"></script>
+		<![endif]-->
+		<script type="text/javascript" src="http://tajs.qq.com/stats?sId=32165839" charset="UTF-8"></script>
+		<script type="text/javascript">
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-16874261-1']);
+			_gaq.push(['_trackPageview']);
+			_gaq.push(['_trackPageLoadTime']);
+			(function() {
+					var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+					ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+					var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+		</script>
+		
+<link rel="canonical" href="/2014/watch-transmission.html" />
+
+
+	</head>
+	<body>
+		<div class="navbar">
+			<a class="navbar-brand" href="/">atsuas</a>
+			<ul class="nav navbar-nav">
+				
+				<li>
+					<a href="/">Blog</a>
+				</li>
+			</ul>
+		</div>
+
+		<div id="main">
+			<div class="container"><div class="hentry">
+    <h1 class="entry-title">上传transmission状态至Yeelink网站 - 续</h1>
+    <div class="entry-meta">
+        <time class="updated" datetime="2014-04-14T00:00:00+08:00" pubdate>
+            <a href="/2014/">2014-04-14</a>
+        </time>
+        <span class="author vcard">
+            by <a class="url fn" href="http://blog.atsuas.info">atsuas</a>
+            
+        </span>
+    </div>
+    <div class="entry-content">
+        <p>前年写过一篇短文<a href="http://blog.atsuas.info/2012/raspberry-transmission.html">上传transmission状态至Yeelink网站</a>，介绍将transmission的状态同步至<a href="http://www.yeelink.com">yeelink</a>网站。本文对当时的脚本做了一些更新，并用pushbullet实时推送下载完成信息到手机。</p>
+
+<h2 id="toc_0">对同步脚本的更新</h2>
+<p>之前的脚本中只实现了上传和下载速度的更新，新版本transmission的CPU和内存占用量也同步至yeelink。</p>
+<p>脚本现在放在gist.github.com，以后只需要在gist上更新，这边就可以看到最新版本
+<script src="https://gist.github.com/wgjtyu/4030333.js"></script></p>
+
+<h2 id="toc_1">实时推送下载完成通知到手机</h2>
+<p>PushBullet是一款推送工具，可以实时推送文字、链接、文件等至手机，详细介绍可以看<a href="http://www.appinn.com/pushbullet/">这里</a>。</p>
+<p>先来看看效果，这是实时接收到的下载通知
+<img style="height:40em;" src="http://ztyublog.u.qiniudn.com/2014-04-27-notifications_transmission.png" alt="下载完成的通知"></p>
+<p>这是最近下载完成的通知
+<img style="height:40em;" src="http://ztyublog.u.qiniudn.com/2014-04-27-all_notifications_transmission.png" alt="最近接收到的下载完成通知"></p>
+<p>除了支持从浏览器端发起到手机的推送，PushBullet还提供了<a href="https://www.pushbullet.com/api">API</a>，我们将用PushBullet的API把种子完成信息推送至手机。</p>
+
+<h4 id="toc_2">获取Api-Key和Device-Key</h4>
+<p>首先我们要获取Api-Key和Device-Key。在<a href="https://www.pushbullet.com/account">Account Settings</a>页面中可以找到Api-Key，下面来说说怎么获取手机的Device-Key。</p>
+<p>假设我们的Api-Key是xxxxxxxx
+参照API文档中的“Get the devices that can be pushed to”部分，在树莓派终端中执行：</p>
+
+<blockquote>
+<p>[wgjtyu@ProBook ~]$ curl -u xxxxxxxx <a href="https://api.pushbullet.com/api/devices">api.pushbullet.com/api/devices</a></p>
+</blockquote>
+<p>curl会问我们要密码，没有密码，所以直接按回车 </p>
+
+<blockquote>
+<p>Enter host password for user &#39;xxxxxxxx&#39;:</p>
+</blockquote>
+<p>接下来返回的信息中包含了我们手机的Device-Key</p>
+
+<blockquote>
+<p>{&ldquo;shared_devices&rdquo;: [], &ldquo;devices&rdquo;: [{&ldquo;iden&rdquo;: &ldquo;u111111111111111&rdquo;, &ldquo;extras&rdquo;: {&ldquo;android_version&rdquo;: &ldquo;4.4.2&rdquo;, &ldquo;sdk_version&rdquo;: &ldquo;19&rdquo;, &ldquo;app_version&rdquo;: 66, &ldquo;model&rdquo;: &ldquo;MI 2A&rdquo;, &ldquo;manufacturer&rdquo;: &ldquo;Xiaomi&rdquo;}, &ldquo;id&rdquo;: 5707702298738688}, {&ldquo;iden&rdquo;: &ldquo;u2222222222222&rdquo;, &ldquo;extras&rdquo;: {&ldquo;sdk_version&rdquo;: null, &ldquo;android_version&rdquo;: null, &ldquo;model&rdquo;: &ldquo;Chrome&rdquo;, &ldquo;app_version&rdquo;: 51, &ldquo;nickname&rdquo;: &ldquo;Chrome&rdquo;, &ldquo;manufacturer&rdquo;: &ldquo;Google&rdquo;}, &ldquo;id&rdquo;: 5629499534213120} ]}</p>
+</blockquote>
+<p>仔细寻找，看到&quot;model&quot;: &ldquo;MI 2A&rdquo;, &ldquo;manufacturer&rdquo;: &ldquo;Xiaomi&quot;，再往前看看，那个&quot;iden&rdquo;:&ldquo;u111111111111111&quot;中的u111111111111111就是我们的Device-Key了。</p>
+<p>有了Api-Key和Device-Key，继续进行下一步吧。</p>
+
+<h4 id="toc_3">写torrent-done脚本</h4>
+<p>把这个脚本写到/home/pi/torrent-done.sh中，注意把单引号中的Api-Key和Device-Key修改成相应的值。
+<script src="https://gist.github.com/wgjtyu/11337582.js"></script>
+给torrent-done.sh赋予执行权限：</p>
+
+<blockquote>
+<p>chmod +x /home/pi/torrent-done.sh</p>
+</blockquote>
+
+<h4 id="toc_4">修改transmission配置文件</h4>
+<p>最后，修改transsion配置文件，在下载完成后调用我们的torrent-done.sh。</p>
+<p>停止transmission</p>
+
+<blockquote>
+<p>sudo service transmission-daemon stop</p>
+</blockquote>
+<p>编辑settings.json，找到&quot;script-torrent-done-filename&quot;行，把值修改为&rdquo;/home/pi/torrent-done.sh&quot;。</p>
+
+<blockquote>
+<p>vim /etc/transmission-daemon/settings.json</p>
+</blockquote>
+<p>启动transmission</p>
+
+<blockquote>
+<p>sudo service transmission-daemon start</p>
+</blockquote>
+<p>OK，全部搞定。</p>
+
+    </div>
+
+    
+
+    <div class="entry-tags">
+        <a href="/tag/transmission/">transmission</a><a href="/tag/pushbullet/">PushBullet</a><a href="/tag/raspberry/">raspberry</a>
+    </div>
+
+    
+	<div class="ds-thread"></div>
+	<script type="text/javascript">
+		var duoshuoQuery = {short_name:"atsuas"};
+		(function() {
+				var ds = document.createElement('script');
+				ds.type = 'text/javascript';ds.async = true;
+				ds.src = 'http://static.duoshuo.com/embed.js';
+				ds.charset = 'UTF-8';
+				(document.getElementsByTagName('head')[0] 
+					|| document.getElementsByTagName('body')[0]).appendChild(ds);
+		})();
+	</script>
+    
+
+    
+</div></div>
+		</div>
+
+		<footer id="footer">
+			<hr class="end" />
+			<nav class="elsewhere">
+				<a href=""></a><a href=""></a><a href=""></a>
+			</nav>
+			<p class="copyright">
+				<span class="software">
+					Powered by <a href="http://lab.lepture.com/liquidluck/">Felix Felicis</a> 3.8.1,
+				</span>
+				<span class="theme">
+					Theme <a href="https://github.com/wgjtyu/liquidluck-theme-bootstrap" rel="nofollow">bootstrap</a> 0.1 by <a href="http://blog.atsuas.info">ztyu</a>
+				</span>
+			</p>
+		</footer>
+		<script type="text/javascript" src="/static/mobile.js?v=3b6df"></script>
+		
+	</body>
+</html>

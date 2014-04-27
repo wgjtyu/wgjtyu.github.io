@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>上传transmission状态至Yeelink网站 - atsuas</title>
+		<script>if (top !== self) top.location = self.location;</script>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+		<link rel="stylesheet" href="http://cdn.staticfile.org/twitter-bootstrap/3.0.0-rc1/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="/static/style.css?v=30058" />
+		<link rel="stylesheet" href="/static/pygments.css?v=c6adc" />
+		
+		<link rel="alternate" type="application/rss+xml" href="/feed.xml" title="atsuas" />
+		<!--<script type="text/javascript" src="http://sanalyse.sinaapp.com/sanalyse.js"></script>-->
+		<!--[if lt IE 9]>
+		<script type="text/javascript" src="/static/html5shiv.js?v=9a10c"></script>
+		<![endif]-->
+		<script type="text/javascript" src="http://tajs.qq.com/stats?sId=32165839" charset="UTF-8"></script>
+		<script type="text/javascript">
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-16874261-1']);
+			_gaq.push(['_trackPageview']);
+			_gaq.push(['_trackPageLoadTime']);
+			(function() {
+					var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+					ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+					var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+		</script>
+		
+<link rel="canonical" href="/2014/raspberry-transmission.html" />
+
+
+	</head>
+	<body>
+		<div class="navbar">
+			<a class="navbar-brand" href="/">atsuas</a>
+			<ul class="nav navbar-nav">
+				
+				<li>
+					<a href="/">Blog</a>
+				</li>
+			</ul>
+		</div>
+
+		<div id="main">
+			<div class="container"><div class="hentry">
+    <h1 class="entry-title">上传transmission状态至Yeelink网站</h1>
+    <div class="entry-meta">
+        <time class="updated" datetime="2014-04-14T00:00:00+08:00" pubdate>
+            <a href="/2014/">2014-04-14</a>
+        </time>
+        <span class="author vcard">
+            by <a class="url fn" href="http://blog.atsuas.info">atsuas</a>
+            
+        </span>
+    </div>
+    <div class="entry-content">
+        <p>本文同时发布在Yeelink论坛(<a href="http://bbs.yeelink.net/thread-112-1-1.html">链接</a>)。</p>
+<p>前段时间买了一个树莓派，主要是用来开transmission下载PT网站的高清电影。因为想随时监控transmission的状态，写了一个脚本，将transmission的上传/下载速度每五分钟上传到Yeelink，然后我就可以用手机打开Yeelink的页面查看transmission最近5分钟的上传/下载速度了。</p>
+<p>围观<a href="http://www.yeelink.net/devices/1014">链接</a></p>
+<p>代码如下:</p>
+
+<script src="https://gist.github.com/wgjtyu/4030333.js"></script>
+
+    </div>
+
+    
+
+    <div class="entry-tags">
+        <a href="/tag/transmission/">transmission</a><a href="/tag/yeelink/">Yeelink</a><a href="/tag/raspberry/">raspberry</a>
+    </div>
+
+    
+	<div class="ds-thread"></div>
+	<script type="text/javascript">
+		var duoshuoQuery = {short_name:"atsuas"};
+		(function() {
+				var ds = document.createElement('script');
+				ds.type = 'text/javascript';ds.async = true;
+				ds.src = 'http://static.duoshuo.com/embed.js';
+				ds.charset = 'UTF-8';
+				(document.getElementsByTagName('head')[0] 
+					|| document.getElementsByTagName('body')[0]).appendChild(ds);
+		})();
+	</script>
+    
+
+    
+</div></div>
+		</div>
+
+		<footer id="footer">
+			<hr class="end" />
+			<nav class="elsewhere">
+				<a href=""></a><a href=""></a><a href=""></a>
+			</nav>
+			<p class="copyright">
+				<span class="software">
+					Powered by <a href="http://lab.lepture.com/liquidluck/">Felix Felicis</a> 3.8.1,
+				</span>
+				<span class="theme">
+					Theme <a href="https://github.com/wgjtyu/liquidluck-theme-bootstrap" rel="nofollow">bootstrap</a> 0.1 by <a href="http://blog.atsuas.info">ztyu</a>
+				</span>
+			</p>
+		</footer>
+		<script type="text/javascript" src="/static/mobile.js?v=3b6df"></script>
+		
+	</body>
+</html>

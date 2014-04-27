@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>在Svn工程中使用Git - atsuas</title>
+		<script>if (top !== self) top.location = self.location;</script>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+		<link rel="stylesheet" href="http://cdn.staticfile.org/twitter-bootstrap/3.0.0-rc1/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="/static/style.css?v=7c864" />
+		<link rel="stylesheet" href="/static/pygments.css?v=c6adc" />
+		
+		<link rel="alternate" type="application/rss+xml" href="/feed.xml" title="atsuas" />
+		<!--<script type="text/javascript" src="http://sanalyse.sinaapp.com/sanalyse.js"></script>-->
+		<!--[if lt IE 9]>
+		<script type="text/javascript" src="/static/html5shiv.js?v=9a10c"></script>
+		<![endif]-->
+		<script type="text/javascript" src="http://tajs.qq.com/stats?sId=32165839" charset="UTF-8"></script>
+		<script type="text/javascript">
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-16874261-1']);
+			_gaq.push(['_trackPageview']);
+			_gaq.push(['_trackPageLoadTime']);
+			(function() {
+					var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+					ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+					var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+		</script>
+		
+<link rel="canonical" href="/2014/git-inside-svn.html" />
+
+
+	</head>
+	<body>
+		<div class="navbar">
+			<a class="navbar-brand" href="/">atsuas</a>
+			<ul class="nav navbar-nav">
+				
+				<li>
+					<a href="/">Blog</a>
+				</li>
+			</ul>
+		</div>
+
+		<div id="main">
+			<div class="container"><div class="hentry">
+    <h1 class="entry-title">在Svn工程中使用Git</h1>
+    <div class="entry-meta">
+        <time class="updated" datetime="2014-07-25T00:00:00+08:00" pubdate>
+            <a href="/2014/">2014-07-25</a>
+        </time>
+        <span class="author vcard">
+            by <a class="url fn" href="http://blog.atsuas.info">atsuas</a>
+            
+        </span>
+    </div>
+    <div class="entry-content">
+        <p>现公司的项目中使用svn作为项目管理工具，而之前一直使用的是git，对于git的分支切换/合并/衍合等操作非常熟悉。</p>
+<p>对于svn只会简单的提交和更新，试着在网上找过svn的教程，想学会svn的分支和合并。在了解到svn的分支就是对于原项目里文件夹的拷贝后，又看了下公司里项目当前的几个分支，总计约150多M。在公司内网，一个checkout下来，十几分钟都过去了。所以，还是用git对代码作分支管理吧。</p>
+<p>因为要在svn项目里用git，这里提交和更新的时候得有一定的顺序，不然容易弄乱项目文件夹。思考了一下，大致准备采用这种思路：</p>
+
+<ol>
+<li><p>当svn服务器有更新时，需要把更新同步到本地。</p>
+
+<ul>
+<li>git checkout master # 切换到git的主线分支</li>
+<li>svn update # svn更新代码</li>
+<li>git commit -a -m &#39;r999&#39; # 用git保存svn更新的内容，并在log里记录svn最新版本号</li>
+<li>git checkout dev #完成后切换到dev分支</li>
+<li>git rebase master #合并master分支内容到当前开发分支，即将svn更新的内容引入开发分支</li>
+</ul></li>
+<li><p>在git的dev分支完成修改，需要在svn提交。</p>
+
+<ul>
+<li>检查svn是否有更新，若有先执行第1步，确保当前master是svn的最新内容。</li>
+<li>svn add *</li>
+<li>svn commit</li>
+<li>git checkout master</li>
+<li>git merge &ndash;no-ff dev -m &#39;r999&#39;</li>
+</ul></li>
+<li><p>平时的开发在git的dev分支上进行，完成后直接commit到dev分支。如果需要开新分支，可以基于dev分支checkout -b，完成小任务后再合并到dev分支</p></li>
+</ol>
+<p>想法就是这样，下周一开始就用这个想法实践。如果实践中遇到了问题，我会更新本文。</p>
+
+    </div>
+
+    
+
+    <div class="entry-tags">
+        <a href="/tag/svn/">svn</a><a href="/tag/git/">git</a>
+    </div>
+
+    
+	<div class="ds-thread"></div>
+	<script type="text/javascript">
+		var duoshuoQuery = {short_name:"atsuas"};
+		(function() {
+				var ds = document.createElement('script');
+				ds.type = 'text/javascript';ds.async = true;
+				ds.src = 'http://static.duoshuo.com/embed.js';
+				ds.charset = 'UTF-8';
+				(document.getElementsByTagName('head')[0] 
+					|| document.getElementsByTagName('body')[0]).appendChild(ds);
+		})();
+	</script>
+    
+
+    
+</div></div>
+		</div>
+
+		<footer id="footer">
+			<hr class="end" />
+			<nav class="elsewhere">
+				<a href=""></a><a href=""></a><a href=""></a>
+			</nav>
+			<p class="copyright">
+				<span class="software">
+					Powered by <a href="http://lab.lepture.com/liquidluck/">Felix Felicis</a> 3.8.1,
+				</span>
+				<span class="theme">
+					Theme <a href="https://github.com/wgjtyu/liquidluck-theme-bootstrap" rel="nofollow">bootstrap</a> 0.1 by <a href="http://blog.atsuas.info">ztyu</a>
+				</span>
+			</p>
+		</footer>
+		<script type="text/javascript" src="/static/mobile.js?v=3b6df"></script>
+		
+	</body>
+</html>

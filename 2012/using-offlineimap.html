@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>将fetchmail换成offlineimap - atsuas</title>
+		<script>if (top !== self) top.location = self.location;</script>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+		<link rel="stylesheet" href="http://cdn.staticfile.org/twitter-bootstrap/3.0.0-rc1/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="/static/style.css?v=7c864" />
+		<link rel="stylesheet" href="/static/pygments.css?v=c6adc" />
+		
+		<link rel="alternate" type="application/rss+xml" href="/feed.xml" title="atsuas" />
+		<!--<script type="text/javascript" src="http://sanalyse.sinaapp.com/sanalyse.js"></script>-->
+		<!--[if lt IE 9]>
+		<script type="text/javascript" src="/static/html5shiv.js?v=9a10c"></script>
+		<![endif]-->
+		<script type="text/javascript" src="http://tajs.qq.com/stats?sId=32165839" charset="UTF-8"></script>
+		<script type="text/javascript">
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-16874261-1']);
+			_gaq.push(['_trackPageview']);
+			_gaq.push(['_trackPageLoadTime']);
+			(function() {
+					var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+					ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+					var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+		</script>
+		
+<link rel="canonical" href="/2012/using-offlineimap.html" />
+
+
+	</head>
+	<body>
+		<div class="navbar">
+			<a class="navbar-brand" href="/">atsuas</a>
+			<ul class="nav navbar-nav">
+				
+				<li>
+					<a href="/">Blog</a>
+				</li>
+			</ul>
+		</div>
+
+		<div id="main">
+			<div class="container"><div class="hentry">
+    <h1 class="entry-title">将fetchmail换成offlineimap</h1>
+    <div class="entry-meta">
+        <time class="updated" datetime="2012-01-02T00:00:00+08:00" pubdate>
+            <a href="/2012/">2012-01-02</a>
+        </time>
+        <span class="author vcard">
+            by <a class="url fn" href="http://blog.atsuas.info">atsuas</a>
+            
+        </span>
+    </div>
+    <div class="entry-content">
+        <p>之前我一直使用的邮件工具组合是mutt+fetchmail+procmail+msmtp.mutt用来看邮件是非常不错的,fetchmail用来下载邮件,procmail用来将邮件放到不同的文件夹中,msmtp用来发送邮件.</p>
+<p>这套组合一直工作得不错,尤其是我订阅了几个邮件列表.但当我开始在手机上看邮件之后,手机和电脑之间的邮件同步就变得麻烦起来.我的想法是先在手机上将不重要的邮件删除,然后再在电脑上处理那些有趣的邮件(譬如带有有趣链接/附件的邮件).</p>
+<p>但当我使用pop来收取邮件时,总会收到一些我未在手机上看过的邮件,最后在电脑边的时间被用于处理水帖上.于是就打算换一个通过imap收取邮件的客户端.</p>
+<p>由于之前在archwiki上看到过对offlineimap的介绍,再加上看中了&#39;offline&#39;,便选择了offlineimap充当我的邮件收取工具.</p>
+<p>在google上搜索了一下,很快就配置好了.简要地说说offlineimap的特性中我喜欢的那部分.之前用procmail来将不同邮件列表的邮件放到不同的文件夹中,这个在offlineimap中是自带的,只要你在Gmail中设置好标签,就会自动同步到本地.第二个是本地和服务器的双向同步,而不只是之前pop收取方式中的服务器同步到本地.另外offlineimap还支持通过正则来过滤邮件,这个是我暂时用不到的 :D
+另外建议将Gmail语言切换至英文吧,否则offlineimap同步邮箱到本地的文件夹时，文件夹名会出现乱码.切换成英文后也方便在offlineimaprc文件中过滤某个标签(譬如你可能不想把All Mail下载到自己的电脑中吧&hellip;)</p>
+
+    </div>
+
+    
+
+    <div class="entry-tags">
+        <a href="/tag/email/">email</a><a href="/tag/offlineimap/">offlineimap</a><a href="/tag/fetchmail/">fetchmail</a>
+    </div>
+
+    
+	<div class="ds-thread"></div>
+	<script type="text/javascript">
+		var duoshuoQuery = {short_name:"atsuas"};
+		(function() {
+				var ds = document.createElement('script');
+				ds.type = 'text/javascript';ds.async = true;
+				ds.src = 'http://static.duoshuo.com/embed.js';
+				ds.charset = 'UTF-8';
+				(document.getElementsByTagName('head')[0] 
+					|| document.getElementsByTagName('body')[0]).appendChild(ds);
+		})();
+	</script>
+    
+
+    
+</div></div>
+		</div>
+
+		<footer id="footer">
+			<hr class="end" />
+			<nav class="elsewhere">
+				<a href=""></a><a href=""></a><a href=""></a>
+			</nav>
+			<p class="copyright">
+				<span class="software">
+					Powered by <a href="http://lab.lepture.com/liquidluck/">Felix Felicis</a> 3.8.1,
+				</span>
+				<span class="theme">
+					Theme <a href="https://github.com/wgjtyu/liquidluck-theme-bootstrap" rel="nofollow">bootstrap</a> 0.1 by <a href="http://blog.atsuas.info">ztyu</a>
+				</span>
+			</p>
+		</footer>
+		<script type="text/javascript" src="/static/mobile.js?v=3b6df"></script>
+		
+	</body>
+</html>

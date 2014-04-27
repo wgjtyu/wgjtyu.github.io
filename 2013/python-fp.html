@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Python 函数式编程笔记 - atsuas</title>
+		<script>if (top !== self) top.location = self.location;</script>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+		<link rel="stylesheet" href="http://cdn.staticfile.org/twitter-bootstrap/3.0.0-rc1/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="/static/style.css?v=7c864" />
+		<link rel="stylesheet" href="/static/pygments.css?v=c6adc" />
+		
+		<link rel="alternate" type="application/rss+xml" href="/feed.xml" title="atsuas" />
+		<!--<script type="text/javascript" src="http://sanalyse.sinaapp.com/sanalyse.js"></script>-->
+		<!--[if lt IE 9]>
+		<script type="text/javascript" src="/static/html5shiv.js?v=9a10c"></script>
+		<![endif]-->
+		<script type="text/javascript" src="http://tajs.qq.com/stats?sId=32165839" charset="UTF-8"></script>
+		<script type="text/javascript">
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-16874261-1']);
+			_gaq.push(['_trackPageview']);
+			_gaq.push(['_trackPageLoadTime']);
+			(function() {
+					var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+					ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+					var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+		</script>
+		
+<link rel="canonical" href="/2013/python-fp.html" />
+
+
+	</head>
+	<body>
+		<div class="navbar">
+			<a class="navbar-brand" href="/">atsuas</a>
+			<ul class="nav navbar-nav">
+				
+				<li>
+					<a href="/">Blog</a>
+				</li>
+			</ul>
+		</div>
+
+		<div id="main">
+			<div class="container"><div class="hentry">
+    <h1 class="entry-title">Python 函数式编程笔记</h1>
+    <div class="entry-meta">
+        <time class="updated" datetime="2013-05-21T00:00:00+08:00" pubdate>
+            <a href="/2013/">2013-05-21</a>
+        </time>
+        <span class="author vcard">
+            by <a class="url fn" href="http://blog.atsuas.info">atsuas</a>
+            
+        </span>
+    </div>
+    <div class="entry-content">
+        <p>一直以来使用python的思维方式都是用以前写C时的那种思维，今天上网查了些资料，学习python的函数式编程方法，记录于此。</p>
+
+<h3 id="toc_0">匿名函数</h3>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">f</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="mi">6</span>
+</pre></div>
+
+<h3 id="toc_1">map(func,iter)</h3>
+<p>对于每个可遍历元素，调用func。返回包含func()结果的列表，例如：</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+</pre></div>
+
+<h3 id="toc_2">filter(func,iter)</h3>
+<p>参数含义同map。返回func()结果为true的元素列表，例如：</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">%</span><span class="mi">2</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+
+<h3 id="toc_3">List comprehenstion</h3>
+<p>在一些需要使用循环的地方非常有用。例如：</p>
+<div class="highlight"><pre><span class="c">#一重循环</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="k">if</span> <span class="n">x</span><span class="o">%</span><span class="mi">2</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="c">#二重循环</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="k">if</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="o">==</span><span class="mi">3</span><span class="p">]</span>
+<span class="p">[(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span>
+</pre></div>
+
+<h3 id="toc_4">闭包(closure)</h3>
+<p>绑定了外部作用域的变量(但不是全局变量)的函数，大部分情况下外部作用域是指外部函数。
+例如求一个函数的导数，实现如下:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">d</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">calc</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">dx</span><span class="o">=</span><span class="mf">0.000001</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">dx</span><span class="p">)</span><span class="o">-</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">/</span><span class="n">dx</span>
+    <span class="k">return</span> <span class="n">calc</span>
+</pre></div>
+
+<hr/>
+
+<h3 id="toc_5">参考资料</h3>
+
+<ul>
+<li><a href="http://blog.csdn.net/program_think/article/details/7240881">为啥俺推荐Python[4]：作为函数式编程语言的Python</a></li>
+<li><a href="http://www.cnblogs.com/huxi/archive/2011/06/18/2084316.html">Python函数式编程指南（一）：概述</a></li>
+<li><a href="http://local.joelonsoftware.com/wiki/%E4%BD%A0%E7%9A%84%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80%E5%8F%AF%E4%BB%A5%E9%80%99%E6%A8%A3%E5%81%9A%E5%97%8E%EF%BC%9F">你的程式語言可以這樣做嗎？</a> / <a href="http://www.joelonsoftware.com/items/2006/08/01.html">Can Your Programming Language Do This?</a></li>
+</ul>
+
+    </div>
+
+    
+
+    <div class="entry-tags">
+        <a href="/tag/python/">python</a><a href="/tag/fp/">FP</a><a href="/tag/program/">program</a>
+    </div>
+
+    
+	<div class="ds-thread"></div>
+	<script type="text/javascript">
+		var duoshuoQuery = {short_name:"atsuas"};
+		(function() {
+				var ds = document.createElement('script');
+				ds.type = 'text/javascript';ds.async = true;
+				ds.src = 'http://static.duoshuo.com/embed.js';
+				ds.charset = 'UTF-8';
+				(document.getElementsByTagName('head')[0] 
+					|| document.getElementsByTagName('body')[0]).appendChild(ds);
+		})();
+	</script>
+    
+
+    
+</div></div>
+		</div>
+
+		<footer id="footer">
+			<hr class="end" />
+			<nav class="elsewhere">
+				<a href=""></a><a href=""></a><a href=""></a>
+			</nav>
+			<p class="copyright">
+				<span class="software">
+					Powered by <a href="http://lab.lepture.com/liquidluck/">Felix Felicis</a> 3.8.1,
+				</span>
+				<span class="theme">
+					Theme <a href="https://github.com/wgjtyu/liquidluck-theme-bootstrap" rel="nofollow">bootstrap</a> 0.1 by <a href="http://blog.atsuas.info">ztyu</a>
+				</span>
+			</p>
+		</footer>
+		<script type="text/javascript" src="/static/mobile.js?v=3b6df"></script>
+		
+	</body>
+</html>

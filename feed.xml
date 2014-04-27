@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>atsuas</title>
+    <link href="/blog.atsuas.info/feed.xml" rel="self" />
+    <link href="/blog.atsuas.info/" />
+    <updated>2014-07-26T15:48:22+08:00</updated>
+    <id>/blog.atsuas.info/</id>
+    <entry>
+        <title type="html"><![CDATA[在Svn工程中使用Git]]></title>
+        <author><name>atsuas</name><uri>http://blog.atsuas.info</uri></author>
+        <link href="blog.atsuas.info/2014/git-inside-svn.html"/>
+        <published>2014-07-25T00:00:00+08:00</published>
+        <updated>2014-07-26T15:48:22+08:00</updated>
+        <id>blog.atsuas.info/2014/git-inside-svn.html</id>
+        <category scheme="/blog.atsuas.info/tag/svn/" term="svn" label="svn" />
+        <category scheme="/blog.atsuas.info/tag/git/" term="git" label="git" />
+        <content type="html" xml:base="blog.atsuas.info" xml:lang="en">
+            <![CDATA[ <p>现公司的项目中使用svn作为项目管理工具，而之前一直使用的是git，对于git的分支切换/合并/衍合等操作非常熟悉。</p>
+<p>对于svn只会简单的提交和更新，试着在网上找过svn的教程，想学会svn的分支和合并。在了解到svn的分支就是对于原项目里文件夹的拷贝后，又看了下公司里项目当前的几个分支，总计约150多M。在公司内网，一个checkout下来，十几分钟都过去了。所以，还是用git对代码作分支管理吧。</p>
+<p>因为要在svn项目里用git，这里提交和更新的时候得有一定的顺序，不然容易弄乱项目文件夹。思考了一下，大致准备采用这种思路：</p>
+
+<ol>
+<li><p>当svn服务器有更新时，需要把更新同步到本地。</p>
+
+<ul>
+<li>git checkout master # 切换到git的主线分支</li>
+<li>svn update # svn更新代码</li>
+<li>git commit -a -m &#39;r999&#39; # 用git保存svn更新的内容，并在log里记录svn最新版本号</li>
+<li>git checkout dev #完成后切换到dev分支</li>
+<li>git rebase master #合并master分支内容到当前开发分支，即将svn更新的内容引入开发分支</li>
+</ul></li>
+<li><p>在git的dev分支完成修改，需要在svn提交。</p>
+
+<ul>
+<li>检查svn是否有更新，若有先执行第1步，确保当前master是svn的最新内容。</li>
+<li>svn add *</li>
+<li>svn commit</li>
+<li>git checkout master</li>
+<li>git merge &ndash;no-ff dev -m &#39;r999&#39;</li>
+</ul></li>
+<li><p>平时的开发在git的dev分支上进行，完成后直接commit到dev分支。如果需要开新分支，可以基于dev分支checkout -b，完成小任务后再合并到dev分支</p></li>
+</ol>
+<p>想法就是这样，下周一开始就用这个想法实践。如果实践中遇到了问题，我会更新本文。</p>
+]]>
+        </content>
+    </entry><entry>
+        <title type="html"><![CDATA[上传transmission状态至Yeelink网站 - 续]]></title>
+        <author><name>atsuas</name><uri>http://blog.atsuas.info</uri></author>
+        <link href="blog.atsuas.info/2014/watch-transmission.html"/>
+        <published>2014-04-14T00:00:00+08:00</published>
+        <updated>2014-04-27T13:29:24+08:00</updated>
+        <id>blog.atsuas.info/2014/watch-transmission.html</id>
+        <category scheme="/blog.atsuas.info/tag/transmission/" term="transmission" label="transmission" />
+        <category scheme="/blog.atsuas.info/tag/pushbullet/" term="PushBullet" label="PushBullet" />
+        <category scheme="/blog.atsuas.info/tag/raspberry/" term="raspberry" label="raspberry" />
+        <content type="html" xml:base="blog.atsuas.info" xml:lang="en">
+            <![CDATA[ <p>前年写过一篇短文<a href="http://blog.atsuas.info/2012/raspberry-transmission.html">上传transmission状态至Yeelink网站</a>，介绍将transmission的状态同步至<a href="http://www.yeelink.com">yeelink</a>网站。本文对当时的脚本做了一些更新，并用pushbullet实时推送下载完成信息到手机。</p>
+
+<h2 id="toc_0">对同步脚本的更新</h2>
+<p>之前的脚本中只实现了上传和下载速度的更新，新版本transmission的CPU和内存占用量也同步至yeelink。</p>
+<p>脚本现在放在gist.github.com，以后只需要在gist上更新，这边就可以看到最新版本
+<script src="https://gist.github.com/wgjtyu/4030333.js"></script></p>
+
+<h2 id="toc_1">实时推送下载完成通知到手机</h2>
+<p>PushBullet是一款推送工具，可以实时推送文字、链接、文件等至手机，详细介绍可以看<a href="http://www.appinn.com/pushbullet/">这里</a>。</p>
+<p>先来看看效果，这是实时接收到的下载通知
+<img style="height:40em;" src="http://ztyublog.u.qiniudn.com/2014-04-27-notifications_transmission.png" alt="下载完成的通知"></p>
+<p>这是最近下载完成的通知
+<img style="height:40em;" src="http://ztyublog.u.qiniudn.com/2014-04-27-all_notifications_transmission.png" alt="最近接收到的下载完成通知"></p>
+<p>除了支持从浏览器端发起到手机的推送，PushBullet还提供了<a href="https://www.pushbullet.com/api">API</a>，我们将用PushBullet的API把种子完成信息推送至手机。</p>
+
+<h4 id="toc_2">获取Api-Key和Device-Key</h4>
+<p>首先我们要获取Api-Key和Device-Key。在<a href="https://www.pushbullet.com/account">Account Settings</a>页面中可以找到Api-Key，下面来说说怎么获取手机的Device-Key。</p>
+<p>假设我们的Api-Key是xxxxxxxx
+参照API文档中的“Get the devices that can be pushed to”部分，在树莓派终端中执行：</p>
+
+<blockquote>
+<p>[wgjtyu@ProBook ~]$ curl -u xxxxxxxx <a href="https://api.pushbullet.com/api/devices">api.pushbullet.com/api/devices</a></p>
+</blockquote>
+<p>curl会问我们要密码，没有密码，所以直接按回车 </p>
+
+<blockquote>
+<p>Enter host password for user &#39;xxxxxxxx&#39;:</p>
+</blockquote>
+<p>接下来返回的信息中包含了我们手机的Device-Key</p>
+
+<blockquote>
+<p>{&ldquo;shared_devices&rdquo;: [], &ldquo;devices&rdquo;: [{&ldquo;iden&rdquo;: &ldquo;u111111111111111&rdquo;, &ldquo;extras&rdquo;: {&ldquo;android_version&rdquo;: &ldquo;4.4.2&rdquo;, &ldquo;sdk_version&rdquo;: &ldquo;19&rdquo;, &ldquo;app_version&rdquo;: 66, &ldquo;model&rdquo;: &ldquo;MI 2A&rdquo;, &ldquo;manufacturer&rdquo;: &ldquo;Xiaomi&rdquo;}, &ldquo;id&rdquo;: 5707702298738688}, {&ldquo;iden&rdquo;: &ldquo;u2222222222222&rdquo;, &ldquo;extras&rdquo;: {&ldquo;sdk_version&rdquo;: null, &ldquo;android_version&rdquo;: null, &ldquo;model&rdquo;: &ldquo;Chrome&rdquo;, &ldquo;app_version&rdquo;: 51, &ldquo;nickname&rdquo;: &ldquo;Chrome&rdquo;, &ldquo;manufacturer&rdquo;: &ldquo;Google&rdquo;}, &ldquo;id&rdquo;: 5629499534213120} ]}</p>
+</blockquote>
+<p>仔细寻找，看到&quot;model&quot;: &ldquo;MI 2A&rdquo;, &ldquo;manufacturer&rdquo;: &ldquo;Xiaomi&quot;，再往前看看，那个&quot;iden&rdquo;:&ldquo;u111111111111111&quot;中的u111111111111111就是我们的Device-Key了。</p>
+<p>有了Api-Key和Device-Key，继续进行下一步吧。</p>
+
+<h4 id="toc_3">写torrent-done脚本</h4>
+<p>把这个脚本写到/home/pi/torrent-done.sh中，注意把单引号中的Api-Key和Device-Key修改成相应的值。
+<script src="https://gist.github.com/wgjtyu/11337582.js"></script>
+给torrent-done.sh赋予执行权限：</p>
+
+<blockquote>
+<p>chmod +x /home/pi/torrent-done.sh</p>
+</blockquote>
+
+<h4 id="toc_4">修改transmission配置文件</h4>
+<p>最后，修改transsion配置文件，在下载完成后调用我们的torrent-done.sh。</p>
+<p>停止transmission</p>
+
+<blockquote>
+<p>sudo service transmission-daemon stop</p>
+</blockquote>
+<p>编辑settings.json，找到&quot;script-torrent-done-filename&quot;行，把值修改为&rdquo;/home/pi/torrent-done.sh&quot;。</p>
+
+<blockquote>
+<p>vim /etc/transmission-daemon/settings.json</p>
+</blockquote>
+<p>启动transmission</p>
+
+<blockquote>
+<p>sudo service transmission-daemon start</p>
+</blockquote>
+<p>OK，全部搞定。</p>
+]]>
+        </content>
+    </entry><entry>
+        <title type="html"><![CDATA[联通的短信通知系统]]></title>
+        <author><name>atsuas</name><uri>http://blog.atsuas.info</uri></author>
+        <link href="blog.atsuas.info/2013/liantong-zha.html"/>
+        <published>2013-09-23T00:00:00+08:00</published>
+        <updated>2014-03-06T10:16:50+08:00</updated>
+        <id>blog.atsuas.info/2013/liantong-zha.html</id>
+        <category scheme="/blog.atsuas.info/tag/生活/" term="生活" label="生活" />
+        <content type="html" xml:base="blog.atsuas.info" xml:lang="en">
+            <![CDATA[ <p>使用联通号码已经有将近10个月了，联通的网速不错，在城市里信号也都还好，一直以来的感觉都是很不错的。但对于联通的计费通知系统，实在是让人无力吐槽了。就放两张联通发过来的短信吧。</p>
+<p>第一条，2013年9月16日9：01,联通的短信告诉我本月已使用51.30MB流量。这些流量是按照0.0002元/KB收取费用。
+<img src="http://pic.yupoo.com/wgjtyu/DbsFKIhx/medish.jpg" alt="图片一"/></p>
+<p>第二条，2013年9月20日10：18,联通说本月使用的流量为0MB。
+<img src="http://pic.yupoo.com/wgjtyu/DbsFoHiR/medish.jpg" alt="图片二"/></p>
+<p>可以看出，在几天之内，联通先后说用了51.3MB和0MB流量。到了今天，也就是9月23号，联通发短信说用了80多MB流量。而且实际上，我的号码开通了联通的网龄升级计划，在第一条短信中所说的51.30MB流量中，有30MB是不用收费的。而这一点，联通并未在短信中告知。</p>
+]]>
+        </content>
+    </entry><entry>
+        <title type="html"><![CDATA[Python 函数式编程笔记]]></title>
+        <author><name>atsuas</name><uri>http://blog.atsuas.info</uri></author>
+        <link href="blog.atsuas.info/2013/python-fp.html"/>
+        <published>2013-05-21T00:00:00+08:00</published>
+        <updated>2013-05-21T22:53:59+08:00</updated>
+        <id>blog.atsuas.info/2013/python-fp.html</id>
+        <category scheme="/blog.atsuas.info/tag/python/" term="python" label="python" />
+        <category scheme="/blog.atsuas.info/tag/fp/" term="FP" label="FP" />
+        <category scheme="/blog.atsuas.info/tag/program/" term="program" label="program" />
+        <content type="html" xml:base="blog.atsuas.info" xml:lang="en">
+            <![CDATA[ <p>一直以来使用python的思维方式都是用以前写C时的那种思维，今天上网查了些资料，学习python的函数式编程方法，记录于此。</p>
+
+<h3 id="toc_0">匿名函数</h3>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">f</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="mi">6</span>
+</pre></div>
+
+<h3 id="toc_1">map(func,iter)</h3>
+<p>对于每个可遍历元素，调用func。返回包含func()结果的列表，例如：</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+</pre></div>
+
+<h3 id="toc_2">filter(func,iter)</h3>
+<p>参数含义同map。返回func()结果为true的元素列表，例如：</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">%</span><span class="mi">2</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+
+<h3 id="toc_3">List comprehenstion</h3>
+<p>在一些需要使用循环的地方非常有用。例如：</p>
+<div class="highlight"><pre><span class="c">#一重循环</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="k">if</span> <span class="n">x</span><span class="o">%</span><span class="mi">2</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="c">#二重循环</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="k">if</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="o">==</span><span class="mi">3</span><span class="p">]</span>
+<span class="p">[(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span>
+</pre></div>
+
+<h3 id="toc_4">闭包(closure)</h3>
+<p>绑定了外部作用域的变量(但不是全局变量)的函数，大部分情况下外部作用域是指外部函数。
+例如求一个函数的导数，实现如下:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">d</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">calc</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">dx</span><span class="o">=</span><span class="mf">0.000001</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">dx</span><span class="p">)</span><span class="o">-</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">/</span><span class="n">dx</span>
+    <span class="k">return</span> <span class="n">calc</span>
+</pre></div>
+
+<hr/>
+
+<h3 id="toc_5">参考资料</h3>
+
+<ul>
+<li><a href="http://blog.csdn.net/program_think/article/details/7240881">为啥俺推荐Python[4]：作为函数式编程语言的Python</a></li>
+<li><a href="http://www.cnblogs.com/huxi/archive/2011/06/18/2084316.html">Python函数式编程指南（一）：概述</a></li>
+<li><a href="http://local.joelonsoftware.com/wiki/%E4%BD%A0%E7%9A%84%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80%E5%8F%AF%E4%BB%A5%E9%80%99%E6%A8%A3%E5%81%9A%E5%97%8E%EF%BC%9F">你的程式語言可以這樣做嗎？</a> / <a href="http://www.joelonsoftware.com/items/2006/08/01.html">Can Your Programming Language Do This?</a></li>
+</ul>
+]]>
+        </content>
+    </entry><entry>
+        <title type="html"><![CDATA[豆瓣九点认证]]></title>
+        <author><name>atsuas</name><uri>http://blog.atsuas.info</uri></author>
+        <link href="blog.atsuas.info/2013/douban_nine_o_clock.html"/>
+        <published>2013-05-13T00:00:00+08:00</published>
+        <updated>2013-05-13T21:04:30+08:00</updated>
+        <id>blog.atsuas.info/2013/douban_nine_o_clock.html</id>
+        <category scheme="/blog.atsuas.info/tag/others/" term="others" label="others" />
+        <content type="html" xml:base="blog.atsuas.info" xml:lang="en">
+            <![CDATA[ <h3 id="toc_0">尝试在豆瓣九点认领自己的blog</h3>
+<p>认证码:doubanclaim91b92b9c83e7bb61</p>
+]]>
+        </content>
+    </entry><entry>
+        <title type="html"><![CDATA[上传transmission状态至Yeelink网站]]></title>
+        <author><name>atsuas</name><uri>http://blog.atsuas.info</uri></author>
+        <link href="blog.atsuas.info/2012/raspberry-transmission.html"/>
+        <published>2012-11-06T00:00:00+08:00</published>
+        <updated>2014-04-24T19:48:53+08:00</updated>
+        <id>blog.atsuas.info/2012/raspberry-transmission.html</id>
+        <category scheme="/blog.atsuas.info/tag/transmission/" term="transmission" label="transmission" />
+        <category scheme="/blog.atsuas.info/tag/yeelink/" term="Yeelink" label="Yeelink" />
+        <category scheme="/blog.atsuas.info/tag/raspberry/" term="raspberry" label="raspberry" />
+        <content type="html" xml:base="blog.atsuas.info" xml:lang="en">
+            <![CDATA[ <p>本文同时发布在Yeelink论坛(<a href="http://bbs.yeelink.net/thread-112-1-1.html">链接</a>)。</p>
+<p>前段时间买了一个树莓派，主要是用来开transmission下载PT网站的高清电影。因为想随时监控transmission的状态，写了一个脚本，将transmission的上传/下载速度每五分钟上传到Yeelink，然后我就可以用手机打开Yeelink的页面查看transmission最近5分钟的上传/下载速度了。</p>
+<p>围观<a href="http://www.yeelink.net/devices/1014">链接</a></p>
+<p>代码如下:</p>
+<div class="highlight"><pre><span class="c">#!/bin/bash</span>
+<span class="nv">tm_username</span><span class="o">=</span><span class="s1">&#39;transmission&#39;</span>
+<span class="nv">tm_password</span><span class="o">=</span><span class="s1">&#39;transmission&#39;</span>
+<span class="c">#在单引号中填入yeelink给你的API KEY</span>
+<span class="nv">YL_ApiKey</span><span class="o">=</span><span class="s1">&#39;API_KEY&#39;</span>
+
+<span class="nv">upspeed</span><span class="o">=</span><span class="sb">`</span>transmission-remote -n <span class="nv">$tm_username</span>:<span class="nv">$tm_password</span> -l|grep Sum|awk <span class="s1">&#39;{print $4}&#39;</span><span class="sb">`</span>
+<span class="nv">dlspeed</span><span class="o">=</span><span class="sb">`</span>transmission-remote -n <span class="nv">$tm_username</span>:<span class="nv">$tm_password</span> -l|grep Sum|awk <span class="s1">&#39;{print $5}&#39;</span><span class="sb">`</span>
+
+<span class="nv">upcmd</span><span class="o">=</span><span class="s2">&quot;curl --request POST --data &#39;{\&quot;value\&quot;:$upspeed}&#39; --header U-ApiKey:$YL_ApiKey --verbose http://api.yeelink.net/v1.0/device/1014/sensor/1279/datapoints&quot;</span>
+<span class="nv">dlcmd</span><span class="o">=</span><span class="s2">&quot;curl --request POST --data &#39;{\&quot;value\&quot;:$dlspeed}&#39; --header U-ApiKey:$YL_ApiKey --verbose http://api.yeelink.net/v1.0/device/1014/sensor/1287/datapoints&quot;</span>
+<span class="nb">echo</span> <span class="nv">$upcmd</span>|bash
+<span class="nb">echo</span> <span class="nv">$dlcmd</span>|bash
+</pre></div>
+]]>
+        </content>
+    </entry><entry>
+        <title type="html"><![CDATA[天柱山之行]]></title>
+        <author><name>atsuas</name><uri>http://blog.atsuas.info</uri></author>
+        <link href="blog.atsuas.info/2012/tianzhushan.html"/>
+        <published>2012-10-06T00:00:00+08:00</published>
+        <updated>2013-05-13T11:01:09+08:00</updated>
+        <id>blog.atsuas.info/2012/tianzhushan.html</id>
+        <category scheme="/blog.atsuas.info/tag/旅行/" term="旅行" label="旅行" />
+        <content type="html" xml:base="blog.atsuas.info" xml:lang="en">
+            <![CDATA[ <p>这个国庆节跟家人一起去了天柱山，一个风景不错的地方。</p>
+<p>在第一个索道起点等候缆车，等了将近2个小时。据管理处的人说，这里的索道一小时大约能运输400人。由于节日上山的人实在太多，下山时我们索性选择了步行。
+<a href="http://www.yupoo.com/photos/wgjtyu/86839145/" title="2012-10-02 10.57.38"><img src="http://pic.yupoo.com/wgjtyu/CjSBAjLW/medish.jpg" alt="2012-10-02 10.57.38" width="640" height="360" border="0" /></a></p>
+<p>终于上了缆车，向身后拍一张，身后大约还可以看到一点盘山公路。缆车下面有一条不向游客开放的小路，可以看到一些员工在游客乘缆车时丢下的垃圾。
+<a href="http://www.yupoo.com/photos/wgjtyu/86839094/" title="2012-10-02 12.21.02"><img src="http://pic.yupoo.com/wgjtyu/CjSBgKKb/medish.jpg" alt="2012-10-02 12.21.02" width="640" height="360" border="0" /></a></p>
+<p>在山上吃过午饭，我们排队大约1个小时，坐上了第二索道的缆车。第二索道的缆车有车厢，而第一个索道的缆车是开放式的。
+<a href="http://www.yupoo.com/photos/wgjtyu/86839098/" title="2012-10-02 14.08.35"><img src="http://pic.yupoo.com/wgjtyu/CjSBjDGT/medish.jpg" alt="2012-10-02 14.08.35" width="640" height="360" border="0" /></a></p>
+<p>在缆车上拍一下山顶，那一块高高的石头就是目的地了。
+<a href="http://www.yupoo.com/photos/wgjtyu/86839097/" title="2012-10-02 14.08.22"><img src="http://pic.yupoo.com/wgjtyu/CjSBiTpJ/medish.jpg" alt="2012-10-02 14.08.22" width="640" height="360" border="0" /></a></p>
+<p>山上流下的泉水和石头被泉水冲刷的痕迹。
+<a href="http://www.yupoo.com/photos/wgjtyu/86839104/" title="2012-10-02 14.14.20"><img src="http://pic.yupoo.com/wgjtyu/CjTvPsAi/medish.jpg" alt="2012-10-02 14.14.20" width="360" height="640" border="0" /></a></p>
+<p>坐在缆车上，随手可以摘下旁边树木的树叶。
+<a href="http://www.yupoo.com/photos/wgjtyu/86839116/" title="2012-10-02 14.18.48"><img src="http://pic.yupoo.com/wgjtyu/CjSFHsLH/medish.jpg" alt="2012-10-02 14.18.48" width="360" height="640" border="0" /></a></p>
+<p>左边最高处看起来很小的那块石头，叫做飞来石。
+<a href="http://www.yupoo.com/photos/wgjtyu/86839121/" title="2012-10-02 14.23.27"><img src="http://pic.yupoo.com/wgjtyu/CjSFC923/medish.jpg" alt="2012-10-02 14.23.27" width="360" height="640" border="0" /></a></p>
+<p>尽管做了两站缆车，要想到达山顶还需要走约一个小时的山路。可能是因为这里比较高，受到的人为污染少，中途风景真的不错。
+<a href="http://www.yupoo.com/photos/wgjtyu/86839138/" title="2012-10-02 15.10.46"><img src="http://pic.yupoo.com/wgjtyu/CjSBwhv8/medish.jpg" alt="2012-10-02 15.10.46" width="640" height="360" border="0" /></a></p>
+<p>最后，下山途中，经历了天柱山旅程中最惊险的地方——百步云梯。其实除了比较抖以外，并没有太惊险的地方。旁边有水泥扶手，抓稳了就好。
+<a href="http://www.yupoo.com/photos/wgjtyu/86839140/" title="2012-10-02 15.29.55"><img src="http://pic.yupoo.com/wgjtyu/CjSDfLYY/medish.jpg" alt="2012-10-02 15.29.55" width="360" height="640" border="0" /></a></p>
+
+<ul>
+<li><a href="http://www.yupoo.com/photos/wgjtyu/albums/4877640/">所有相片</a></li>
+</ul>
+]]>
+        </content>
+    </entry><entry>
+        <title type="html"><![CDATA[开始使用坚果云]]></title>
+        <author><name>atsuas</name><uri>http://blog.atsuas.info</uri></author>
+        <link href="blog.atsuas.info/2012/jianguoyun.html"/>
+        <published>2012-06-20T00:00:00+08:00</published>
+        <updated>2013-05-13T11:01:09+08:00</updated>
+        <id>blog.atsuas.info/2012/jianguoyun.html</id>
+        <category scheme="/blog.atsuas.info/tag/网盘/" term="网盘" label="网盘" />
+        <content type="html" xml:base="blog.atsuas.info" xml:lang="en">
+            <![CDATA[ <p>我一直想找一个稳定的云同步服务，能够同时同步Windows,Linux和Android三个平台上的文件。</p>
+<p>曾经用过dropbox，利用python api，做过一个同步工具。但是因为不可抗拒的原因，dropbox的服务不够稳定，使用起来有点麻烦。</p>
+<p>直到昨天，使用了坚果云。</p>
+<p>坚果云不限存储空间，只限制上传/下载流量。免费的存储空间对于我们来说是一个优点，但是上传/下载流量肯定会不够用的，到时候不得不买付费服务。</p>
+<p>不管怎么样，我打算先用坚果云的服务。</p>
+]]>
+        </content>
+    </entry><entry>
+        <title type="html"><![CDATA[2012-02 阅读分享]]></title>
+        <author><name>atsuas</name><uri>http://blog.atsuas.info</uri></author>
+        <link href="blog.atsuas.info/2012/what_i_read_fed_2012.html"/>
+        <published>2012-03-07T00:00:00+08:00</published>
+        <updated>2013-05-13T11:01:09+08:00</updated>
+        <id>blog.atsuas.info/2012/what_i_read_fed_2012.html</id>
+        <category scheme="/blog.atsuas.info/tag/阅读/" term="阅读" label="阅读" />
+        <category scheme="/blog.atsuas.info/tag/分享/" term="分享" label="分享" />
+        <content type="html" xml:base="blog.atsuas.info" xml:lang="en">
+            <![CDATA[ <h3 id="toc_0">摘录自我在2012年2月读的一些文章</h3>
+
+<ul>
+<li><p><a href="http://www.dapenti.com/blog/more.asp?name=xilei&amp;id=24574">大学学什么</a></p>
+<p>大学培养你对生活的敏感，帮助你体会一部伟大的文学著作、分享别人的感情，理解我们文明的源流，或者教育你更有效地建立人际纽带，形成自己的价值观念，等等。这些都未必能直接帮助你找到工作，但可以使你生活得更充实。</p>
+<p>大学就是这么一个地方：你选择一个你最喜欢的东西，看看你干自己最喜欢的事情能干得多么出色。这才是检验你才能的一把尺子，也是对你最好的训练。从这种训练中所获得的素质，将来干什么都有用。</p></li>
+<li><p><a href="http://www.yuewei.net/851.html">傲慢与偏见</a></p>
+<p>与意见相左的人纯粹地探讨是件愉快的事情，可转身就是懒得理你或者直接人身攻击就显得无趣了。</p></li>
+<li><p><a href="http://www.ioutlier.com/addressed-to-change-jobs-and-looking-for-work-students/">写给换工作和找工作的同学</a></p>
+<p>去雪中送炭的地方发挥最大价值,获得最大回报,而不是去锦上添花.</p></li>
+<li><p><a href="http://kongse.me/?p=1145">【周记】20120119努力的生活好不好？！</a></p>
+<p>最可怕的事情是比你优秀的人比你更努力 是要告诫自己，这个世界上比我聪明并且比我努力的人有很多很多，如果我不抓紧就会落到别人后面，其实落到后面并不可怕，可怕的是我会因为自己的不努力而怨恨自己。</p>
+<p>学会舍弃，人生没有那么多的时间从头到尾的每本书都读，每张照片都保留，不好的东西提早舍弃不要浪费自己的时间。不愿舍弃就表示自己还没有挑选的能力，没有分辨好坏的能力，只有选择才能提高。</p></li>
+<li><p><a href="http://www.mifengtd.cn/articles/say-no-without-feeling-guilty.html">怎样不内疚的说“不”</a></p>
+<p>放开不必要的内疚，你不需要为自己的决定寻找理由。让对方知道，你认同他们，但很遗憾，你不能帮助他们。从长远来看 ，学会说“不”，将提高你处理人际关系的能力，改善与他人的关系。</p></li>
+<li><p><a href="http://www.douban.com/group/topic/23509480/">【人生就是不停的战斗】九把刀北大演讲</a></p>
+<p>成绩突飞猛进的关键是什么？认为是努力用功读书的同学请举手。（木有）没有人。
+认为是伟大爱情的请举手。（观众笑）（举手）大家举手。
+答案是以上皆非，答案是除非你前面的成绩烂到爆炸，否则你完全没有突飞猛进的余地（观众笑）（鼓掌）。所以啊，我表示非常同情，那些只会考第一名的同学，因为他们的人生除了失败以为没有别的可能性（观众笑）（鼓掌）。</p>
+<p>我从来不喜欢读书，但是我觉得喜欢一个人，就要偶尔做些自己并不喜欢的事。</p>
+<p>但是，这成长是不可逆的，一旦我们眼中失去了那种单纯只是想要讨你开心的灵魂和火焰的时候，接下来就是在装了，全都是在装。</p></li>
+</ul>
+]]>
+        </content>
+    </entry><entry>
+        <title type="html"><![CDATA[从firefox转到chrome]]></title>
+        <author><name>atsuas</name><uri>http://blog.atsuas.info</uri></author>
+        <link href="blog.atsuas.info/2012/chromium-vs-firefox.html"/>
+        <published>2012-02-24T00:00:00+08:00</published>
+        <updated>2013-05-13T11:01:09+08:00</updated>
+        <id>blog.atsuas.info/2012/chromium-vs-firefox.html</id>
+        <category scheme="/blog.atsuas.info/tag/浏览器/" term="浏览器" label="浏览器" />
+        <category scheme="/blog.atsuas.info/tag/firefox/" term="firefox" label="firefox" />
+        <category scheme="/blog.atsuas.info/tag/chrome/" term="chrome" label="chrome" />
+        <content type="html" xml:base="blog.atsuas.info" xml:lang="en">
+            <![CDATA[ <p>之前使用的浏览器是firefox，firefox的最大优势就是插件了。而这些插件中最有吸引力的就是vimperator。</p>
+<p>舍友早先劝过我用chrome，因为没有好用的vim快捷操作插件，我一直没有认真地去试过chrome。最近这几天受不了firefox在打开有flash的页面时拖慢电脑速度，重新开始使用chrome。</p>
+<p>用了几天，说说自己最喜欢的3个插件:</p>
+
+<ul>
+<li>首先是vimuim，这个是对应于vimperator的替代品，但功能一点不差:自动进入插入模式;方便地在多tab中操作;灵活打开本页链接…安装好vimium后，在标签页按‘？’可以看到一份简短的帮助（新版本vimuim的快捷键功能会更新，譬如关闭当前标签页按键是‘x’而不是之前的‘d’）。</li>
+<li>另一个是CreQQ，这个插件封装了webqq（希望我没有形容错），去掉了webqq多余的界面，保留最基本的文字聊天功能，非常适合在linux这种没有腾讯官方客户端的环境下使用qq。</li>
+<li>最后是klip.me插件，这个插件可以让你一键保存当前网页的文字内容，留作以后阅读，支持发送到kindle。</li>
+</ul>
+]]>
+        </content>
+    </entry><entry>
+        <title type="html"><![CDATA[liquidluck测试]]></title>
+        <author><name>atsuas</name><uri>http://blog.atsuas.info</uri></author>
+        <link href="blog.atsuas.info/2012/a-test.html"/>
+        <published>2012-02-11T00:00:00+08:00</published>
+        <updated>2013-05-13T11:01:09+08:00</updated>
+        <id>blog.atsuas.info/2012/a-test.html</id>
+        <category scheme="/blog.atsuas.info/tag/测试/" term="测试" label="测试" />
+        <content type="html" xml:base="blog.atsuas.info" xml:lang="en">
+            <![CDATA[ <p>对liquidluck的测试</p>
+<p>liquidluck是一个简单的轻量级静态博客产生器，支持markdown和restructedText格式，本文是用markdown写的。</p>
+<p>下面是一些代码：
+[sourcecode:html]
+<div id="demo">
+hello world
+</div>
+[/sourcecode]
+代码结束</p>
+]]>
+        </content>
+    </entry><entry>
+        <title type="html"><![CDATA[将fetchmail换成offlineimap]]></title>
+        <author><name>atsuas</name><uri>http://blog.atsuas.info</uri></author>
+        <link href="blog.atsuas.info/2012/using-offlineimap.html"/>
+        <published>2012-01-02T00:00:00+08:00</published>
+        <updated>2013-05-13T11:01:09+08:00</updated>
+        <id>blog.atsuas.info/2012/using-offlineimap.html</id>
+        <category scheme="/blog.atsuas.info/tag/email/" term="email" label="email" />
+        <category scheme="/blog.atsuas.info/tag/offlineimap/" term="offlineimap" label="offlineimap" />
+        <category scheme="/blog.atsuas.info/tag/fetchmail/" term="fetchmail" label="fetchmail" />
+        <content type="html" xml:base="blog.atsuas.info" xml:lang="en">
+            <![CDATA[ <p>之前我一直使用的邮件工具组合是mutt+fetchmail+procmail+msmtp.mutt用来看邮件是非常不错的,fetchmail用来下载邮件,procmail用来将邮件放到不同的文件夹中,msmtp用来发送邮件.</p>
+<p>这套组合一直工作得不错,尤其是我订阅了几个邮件列表.但当我开始在手机上看邮件之后,手机和电脑之间的邮件同步就变得麻烦起来.我的想法是先在手机上将不重要的邮件删除,然后再在电脑上处理那些有趣的邮件(譬如带有有趣链接/附件的邮件).</p>
+<p>但当我使用pop来收取邮件时,总会收到一些我未在手机上看过的邮件,最后在电脑边的时间被用于处理水帖上.于是就打算换一个通过imap收取邮件的客户端.</p>
+<p>由于之前在archwiki上看到过对offlineimap的介绍,再加上看中了&#39;offline&#39;,便选择了offlineimap充当我的邮件收取工具.</p>
+<p>在google上搜索了一下,很快就配置好了.简要地说说offlineimap的特性中我喜欢的那部分.之前用procmail来将不同邮件列表的邮件放到不同的文件夹中,这个在offlineimap中是自带的,只要你在Gmail中设置好标签,就会自动同步到本地.第二个是本地和服务器的双向同步,而不只是之前pop收取方式中的服务器同步到本地.另外offlineimap还支持通过正则来过滤邮件,这个是我暂时用不到的 :D
+另外建议将Gmail语言切换至英文吧,否则offlineimap同步邮箱到本地的文件夹时，文件夹名会出现乱码.切换成英文后也方便在offlineimaprc文件中过滤某个标签(譬如你可能不想把All Mail下载到自己的电脑中吧&hellip;)</p>
+]]>
+        </content>
+    </entry>
+</feed>
